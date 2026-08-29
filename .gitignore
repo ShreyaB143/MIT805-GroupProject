@@ -16,7 +16,7 @@ derby.log
 _SUCCESS
 
 # Data
-Test
+test
 data/raw/
 data/working/
 data/schema_reference/
