@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Spark
+spark-warehouse/
+metastore_db/
+derby.log
+*.crc
+_SUCCESS
+
+# Data (per project plan: raw/working datasets are documented, not committed)
+data/raw/
+data/working/
+*.parquet
+*.csv
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# OS
+.DS_Store
