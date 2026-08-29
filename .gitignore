@@ -15,11 +15,14 @@ derby.log
 *.crc
 _SUCCESS
 
-# Data (per project plan: raw/working datasets are documented, not committed)
+# Data
+Test
 data/raw/
 data/working/
+data/schema_reference/
 *.parquet
-*.csv
+data/working/*.csv
+!data/raw_catalog.csv
 
 # VS Code
 .vscode/*
