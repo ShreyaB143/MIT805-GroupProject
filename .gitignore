@@ -25,7 +25,7 @@ data/working/*.csv
 !data/raw_catalog.csv
 
 # VS Code
-.vscode/*
+.vscode
 
 # OS
 .DS_Store
