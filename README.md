@@ -9,6 +9,7 @@
 
 ## Repository structure
 
+```
 .
 ├── README.md
 ├── requirements.txt
@@ -19,6 +20,7 @@
 ├── output/
 ├── figures/
 └── report/
+```
 
 ## Dataset
 
