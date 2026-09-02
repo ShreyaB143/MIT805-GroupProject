@@ -1,0 +1,115 @@
+{
+  "months_total_raw": 139,
+  "months_with_data": 139,
+  "months_no_output": 0,
+  "partial_run": false,
+  "analysis_rows": 858199338,
+  "processing_gb": 18.77,
+  "raw_rows_total": 895333567,
+  "cleaned_rows_total": 858199338,
+  "retention_pct_overall": 95.85,
+  "working_set_gb": 12.15,
+  "invalid_dates": 2317,
+  "q_trip_distance": {
+    "p1": 0.3,
+    "p25": 1.0,
+    "p50": 1.7,
+    "p75": 3.2,
+    "p95": 11.15,
+    "p99": 19.05
+  },
+  "q_fare_amount": {
+    "p1": 3.5,
+    "p25": 7.0,
+    "p50": 10.0,
+    "p75": 15.5,
+    "p95": 39.5,
+    "p99": 62.5
+  },
+  "q_total_amount": {
+    "p1": 4.8,
+    "p25": 9.5,
+    "p50": 13.56,
+    "p75": 20.3,
+    "p95": 51.34,
+    "p99": 80.87
+  },
+  "q_trip_duration_min": {
+    "p1": 1.7,
+    "p25": 6.87,
+    "p50": 11.38,
+    "p75": 18.53,
+    "p95": 37.23,
+    "p99": 61.43
+  },
+  "first_pickup": "2014-06-01",
+  "last_pickup": "2026-12-16",
+  "mean_distance": 3.06,
+  "mean_fare": 13.83,
+  "distinct_pu_zones": 265,
+  "tip_rate_pct": 15.21,
+  "monthly_peak": {
+    "month": "2014-10",
+    "trips": 14224018
+  },
+  "monthly_trough": {
+    "month": "2026-12",
+    "trips": 1
+  },
+  "monthly_latest": {
+    "month": "2026-12",
+    "trips": 1
+  },
+  "covid_drop_pct": 100.0,
+  "recovery_pct_of_peak": 0.0,
+  "peak_hour_weekday": 18,
+  "peak_hour_weekend": 18,
+  "trough_hour": 4,
+  "slowest_hour_mph": {
+    "hour": 11,
+    "mph": 11.25
+  },
+  "fastest_hour_mph": {
+    "hour": 4,
+    "mph": 25.48
+  },
+  "distance_mode_bin": 1.0,
+  "pct_trips_under_3mi": 73.7,
+  "top10_zone_share": 34.1,
+  "top_zone": {
+    "zone": "Upper East Side South",
+    "borough": "Manhattan",
+    "share": 4.13
+  },
+  "borough_share": {
+    "Manhattan": 90.6,
+    "Queens": 6.5,
+    "Brooklyn": 1.4,
+    "Unknown": 1.3,
+    "Bronx": 0.1,
+    "Staten Island": 0.0,
+    "EWR": 0.0
+  },
+  "viz_cells": "884,040",
+  "viz_flat_zones": 255,
+  "mean_trips_per_day": 202596,
+  "busiest_day": {
+    "date": "2014-11-01",
+    "trips": 574485
+  },
+  "peak_trips_per_min": 398.9,
+  "schema_distinct_layouts": 2,
+  "schema_added": [
+    "cbd_congestion_fee"
+  ],
+  "schema_removed": [],
+  "yield_best_hour": {
+    "hour": 5,
+    "usd_per_veh_hour": 88.35
+  },
+  "yield_worst_hour": {
+    "hour": 15,
+    "usd_per_veh_hour": 60.29
+  },
+  "yield_spread_pct": 46.6
+}
