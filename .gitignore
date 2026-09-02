@@ -27,5 +27,8 @@ data/working/*.csv
 # VS Code
 .vscode
 
+# Spark
+.spark-tmp
+
 # OS
 .DS_Store
