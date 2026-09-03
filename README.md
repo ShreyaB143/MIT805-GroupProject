@@ -3,7 +3,7 @@
 ## Group members
 
 - Shreya Bharat (19031786)
-- Lerato Mokori(26834694)
+- Lerato Mokori (26834694)
 
 ## Description
 
