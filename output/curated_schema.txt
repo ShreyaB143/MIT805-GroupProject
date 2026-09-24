@@ -1,0 +1,15 @@
+MIT805 Part 2 curated schema - frozen 2026-09-25
+pickup_ts      timestamp_ntz
+dropoff_ts     timestamp_ntz
+pu             int
+do             int
+miles          double
+fare           double
+tip            double
+duration_hr    double
+speed_mph      double
+revenue        double
+hour           int
+daytype        string
+year           int
+month          int

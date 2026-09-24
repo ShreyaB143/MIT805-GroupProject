@@ -20,7 +20,12 @@ test
 data/raw/
 data/working/
 data/schema_reference/
+data/cleaned_monthly/
+data/curated/
+data/spark-events/
+data/spark-tmp/
 *.parquet
+*.zip
 data/working/*.csv
 !data/raw_catalog.csv
 
@@ -32,3 +37,4 @@ data/working/*.csv
 
 # OS
 .DS_Store
+output/spark-events/
