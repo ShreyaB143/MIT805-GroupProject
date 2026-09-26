@@ -1,0 +1,268 @@
+== Physical Plan ==
+InMemoryTableScan (1)
+   +- InMemoryRelation (2)
+         +- * Project (46)
+            +- * Project (45)
+               +- * BroadcastHashJoin Inner BuildRight (44)
+                  :- * Project (39)
+                  :  +- * HashAggregate (38)
+                  :     +- Exchange (37)
+                  :        +- * HashAggregate (36)
+                  :           +- * Project (35)
+                  :              +- * BroadcastHashJoin LeftOuter BuildRight (34)
+                  :                 :- * Project (21)
+                  :                 :  +- * BroadcastHashJoin LeftOuter BuildRight (20)
+                  :                 :     :- * Project (6)
+                  :                 :     :  +- * Filter (5)
+                  :                 :     :     +- * ColumnarToRow (4)
+                  :                 :     :        +- Scan parquet  (3)
+                  :                 :     +- BroadcastExchange (19)
+                  :                 :        +- * Filter (18)
+                  :                 :           +- InMemoryTableScan (7) (columnarIn=false, columnarOut=true)
+                  :                 :                 +- InMemoryRelation (8)
+                  :                 :                       +- * Project (17)
+                  :                 :                          +- * Filter (16)
+                  :                 :                             +- * HashAggregate (15)
+                  :                 :                                +- Exchange (14)
+                  :                 :                                   +- * HashAggregate (13)
+                  :                 :                                      +- * Project (12)
+                  :                 :                                         +- * Filter (11)
+                  :                 :                                            +- * ColumnarToRow (10)
+                  :                 :                                               +- Scan parquet  (9)
+                  :                 +- BroadcastExchange (33)
+                  :                    +- * Filter (32)
+                  :                       +- InMemoryTableScan (22) (columnarIn=false, columnarOut=true)
+                  :                             +- InMemoryRelation (23)
+                  :                                   +- * Project (31)
+                  :                                      +- * HashAggregate (30)
+                  :                                         +- Exchange (29)
+                  :                                            +- * HashAggregate (28)
+                  :                                               +- * Project (27)
+                  :                                                  +- * Filter (26)
+                  :                                                     +- * ColumnarToRow (25)
+                  :                                                        +- Scan parquet  (24)
+                  +- BroadcastExchange (43)
+                     +- * Filter (42)
+                        +- InMemoryTableScan (40) (columnarIn=false, columnarOut=true)
+                              +- InMemoryRelation (41)
+                                    +- * Project (31)
+                                       +- * HashAggregate (30)
+                                          +- Exchange (29)
+                                             +- * HashAggregate (28)
+                                                +- * Project (27)
+                                                   +- * Filter (26)
+                                                      +- * ColumnarToRow (25)
+                                                         +- Scan parquet  (24)
+
+
+(1) InMemoryTableScan
+Output [13]: [pu#101, hour#109, daytype#110, rev#1809, hours#1810, miles#1811, delay_hr#1812, trips#1813L, yield_hr#1838, speed#1839, ff_yield_zone#1859, yield_gap#1861, forgone#1862]
+Arguments: [pu#101, hour#109, daytype#110, rev#1809, hours#1810, miles#1811, delay_hr#1812, trips#1813L, yield_hr#1838, speed#1839, ff_yield_zone#1859, yield_gap#1861, forgone#1862]
+
+(2) InMemoryRelation
+Arguments: [pu#101, hour#109, daytype#110, rev#1809, hours#1810, miles#1811, delay_hr#1812, trips#1813L, yield_hr#1838, speed#1839, ff_yield_zone#1859, yield_gap#1861, forgone#1862], StorageLevel(disk, memory, deserialized, 1 replicas)
+
+(3) Scan parquet 
+Output [9]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+Batched: true
+Location: InMemoryFileIndex [file:/Users/shreyabharat/Projects/MIT805-GroupProject/data/filtered]
+PushedFilters: [IsNotNull(pu)]
+ReadSchema: struct<pu:int,do:int,miles:double,duration_hr:double,revenue:double,hour:int,daytype:string>
+
+(4) ColumnarToRow [codegen id : 3]
+Input [9]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+
+(5) Filter [codegen id : 3]
+Input [9]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+Condition : isnotnull(pu#101)
+
+(6) Project [codegen id : 3]
+Output [7]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110]
+Input [9]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+
+(7) InMemoryTableScan
+Output [3]: [pu#1779, do#1780, ff_speed#198]
+Arguments: [pu#1779, do#1780, ff_speed#198], [isnotnull(pu#1779), isnotnull(do#1780)]
+
+(8) InMemoryRelation
+Arguments: [pu#1779, do#1780, ff_speed#198, n_night#180L], StorageLevel(disk, memory, deserialized, 1 replicas)
+
+(9) Scan parquet 
+Output [8]: [pu#101, do#102, miles#103, duration_hr#106, hour#109, daytype#110, year#111, month#112]
+Batched: true
+Location: InMemoryFileIndex [file:/Users/shreyabharat/Projects/MIT805-GroupProject/data/filtered]
+PushedFilters: [IsNotNull(hour), IsNotNull(daytype), GreaterThanOrEqual(hour,1), LessThanOrEqual(hour,4), EqualTo(daytype,weekday)]
+ReadSchema: struct<pu:int,do:int,miles:double,duration_hr:double,hour:int,daytype:string>
+
+(10) ColumnarToRow [codegen id : 1]
+Input [8]: [pu#101, do#102, miles#103, duration_hr#106, hour#109, daytype#110, year#111, month#112]
+
+(11) Filter [codegen id : 1]
+Input [8]: [pu#101, do#102, miles#103, duration_hr#106, hour#109, daytype#110, year#111, month#112]
+Condition : ((((isnotnull(hour#109) AND isnotnull(daytype#110)) AND (hour#109 >= 1)) AND (hour#109 <= 4)) AND (daytype#110 = weekday))
+
+(12) Project [codegen id : 1]
+Output [4]: [pu#101, do#102, miles#103, duration_hr#106]
+Input [8]: [pu#101, do#102, miles#103, duration_hr#106, hour#109, daytype#110, year#111, month#112]
+
+(13) HashAggregate [codegen id : 1]
+Input [4]: [pu#101, do#102, miles#103, duration_hr#106]
+Keys [2]: [pu#101, do#102]
+Functions [3]: [partial_sum(miles#103), partial_sum(duration_hr#106), partial_count(1)]
+Aggregate Attributes [3]: [sum#199, sum#200, count#201L]
+Results [5]: [pu#101, do#102, sum#202, sum#203, count#204L]
+
+(14) Exchange
+Input [5]: [pu#101, do#102, sum#202, sum#203, count#204L]
+Arguments: hashpartitioning(pu#101, do#102, 32), ENSURE_REQUIREMENTS, [plan_id=225]
+
+(15) HashAggregate [codegen id : 2]
+Input [5]: [pu#101, do#102, sum#202, sum#203, count#204L]
+Keys [2]: [pu#101, do#102]
+Functions [3]: [sum(miles#103), sum(duration_hr#106), count(1)]
+Aggregate Attributes [3]: [sum(miles#103)#195, sum(duration_hr#106)#196, count(1)#197L]
+Results [5]: [pu#101, do#102, sum(miles#103)#195 AS m#178, sum(duration_hr#106)#196 AS h#179, count(1)#197L AS n_night#180L]
+
+(16) Filter [codegen id : 2]
+Input [5]: [pu#101, do#102, m#178, h#179, n_night#180L]
+Condition : (n_night#180L >= 100)
+
+(17) Project [codegen id : 2]
+Output [4]: [pu#101, do#102, (m#178 / h#179) AS ff_speed#198, n_night#180L]
+Input [5]: [pu#101, do#102, m#178, h#179, n_night#180L]
+
+(18) Filter [codegen id : 1]
+Input [3]: [pu#1779, do#1780, ff_speed#198]
+Condition : (isnotnull(pu#1779) AND isnotnull(do#1780))
+
+(19) BroadcastExchange
+Input [3]: [pu#1779, do#1780, ff_speed#198]
+Arguments: HashedRelationBroadcastMode(List((shiftleft(cast(input[0, int, false] as bigint), 32) | (cast(input[1, int, false] as bigint) & 4294967295))),false), [plan_id=780]
+
+(20) BroadcastHashJoin [codegen id : 3]
+Left keys [2]: [pu#101, do#102]
+Right keys [2]: [pu#1779, do#1780]
+Join type: LeftOuter
+Join condition: None
+
+(21) Project [codegen id : 3]
+Output [7]: [pu#101, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, ff_speed#198]
+Input [10]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, pu#1779, do#1780, ff_speed#198]
+
+(22) InMemoryTableScan
+Output [2]: [pu#1794, ff_speed_zone#249]
+Arguments: [pu#1794, ff_speed_zone#249], [isnotnull(pu#1794)]
+
+(23) InMemoryRelation
+Arguments: [pu#1794, ff_speed_zone#249, ff_yield_zone#250, n_night#230L], StorageLevel(disk, memory, deserialized, 1 replicas)
+
+(24) Scan parquet 
+Output [8]: [pu#101, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+Batched: true
+Location: InMemoryFileIndex [file:/Users/shreyabharat/Projects/MIT805-GroupProject/data/filtered]
+PushedFilters: [IsNotNull(hour), IsNotNull(daytype), GreaterThanOrEqual(hour,1), LessThanOrEqual(hour,4), EqualTo(daytype,weekday)]
+ReadSchema: struct<pu:int,miles:double,duration_hr:double,revenue:double,hour:int,daytype:string>
+
+(25) ColumnarToRow [codegen id : 1]
+Input [8]: [pu#101, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+
+(26) Filter [codegen id : 1]
+Input [8]: [pu#101, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+Condition : ((((isnotnull(hour#109) AND isnotnull(daytype#110)) AND (hour#109 >= 1)) AND (hour#109 <= 4)) AND (daytype#110 = weekday))
+
+(27) Project [codegen id : 1]
+Output [4]: [pu#101, miles#103, duration_hr#106, revenue#108]
+Input [8]: [pu#101, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+
+(28) HashAggregate [codegen id : 1]
+Input [4]: [pu#101, miles#103, duration_hr#106, revenue#108]
+Keys [1]: [pu#101]
+Functions [4]: [partial_sum(miles#103), partial_sum(duration_hr#106), partial_sum(revenue#108), partial_count(1)]
+Aggregate Attributes [4]: [sum#251, sum#252, sum#253, count#254L]
+Results [5]: [pu#101, sum#255, sum#256, sum#257, count#258L]
+
+(29) Exchange
+Input [5]: [pu#101, sum#255, sum#256, sum#257, count#258L]
+Arguments: hashpartitioning(pu#101, 32), ENSURE_REQUIREMENTS, [plan_id=277]
+
+(30) HashAggregate [codegen id : 2]
+Input [5]: [pu#101, sum#255, sum#256, sum#257, count#258L]
+Keys [1]: [pu#101]
+Functions [4]: [sum(miles#103), sum(duration_hr#106), sum(revenue#108), count(1)]
+Aggregate Attributes [4]: [sum(miles#103)#245, sum(duration_hr#106)#246, sum(revenue#108)#247, count(1)#248L]
+Results [5]: [pu#101, sum(miles#103)#245 AS m#227, sum(duration_hr#106)#246 AS h#228, sum(revenue#108)#247 AS r#229, count(1)#248L AS n_night#230L]
+
+(31) Project [codegen id : 2]
+Output [4]: [pu#101, (m#227 / h#228) AS ff_speed_zone#249, (r#229 / h#228) AS ff_yield_zone#250, n_night#230L]
+Input [5]: [pu#101, m#227, h#228, r#229, n_night#230L]
+
+(32) Filter [codegen id : 2]
+Input [2]: [pu#1794, ff_speed_zone#249]
+Condition : isnotnull(pu#1794)
+
+(33) BroadcastExchange
+Input [2]: [pu#1794, ff_speed_zone#249]
+Arguments: HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=787]
+
+(34) BroadcastHashJoin [codegen id : 3]
+Left keys [1]: [pu#101]
+Right keys [1]: [pu#1794]
+Join type: LeftOuter
+Join condition: None
+
+(35) Project [codegen id : 3]
+Output [7]: [pu#101, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, (duration_hr#106 - (miles#103 / coalesce(ff_speed#198, ff_speed_zone#249))) AS delay_hr#1808]
+Input [9]: [pu#101, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, ff_speed#198, pu#1794, ff_speed_zone#249]
+
+(36) HashAggregate [codegen id : 3]
+Input [7]: [pu#101, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, delay_hr#1808]
+Keys [3]: [pu#101, hour#109, daytype#110]
+Functions [5]: [partial_sum(revenue#108), partial_sum(duration_hr#106), partial_sum(miles#103), partial_sum(delay_hr#1808), partial_count(1)]
+Aggregate Attributes [5]: [sum#2063, sum#2064, sum#2065, sum#2066, count#2067L]
+Results [8]: [pu#101, hour#109, daytype#110, sum#2068, sum#2069, sum#2070, sum#2071, count#2072L]
+
+(37) Exchange
+Input [8]: [pu#101, hour#109, daytype#110, sum#2068, sum#2069, sum#2070, sum#2071, count#2072L]
+Arguments: hashpartitioning(pu#101, hour#109, daytype#110, 32), ENSURE_REQUIREMENTS, [plan_id=793]
+
+(38) HashAggregate [codegen id : 5]
+Input [8]: [pu#101, hour#109, daytype#110, sum#2068, sum#2069, sum#2070, sum#2071, count#2072L]
+Keys [3]: [pu#101, hour#109, daytype#110]
+Functions [5]: [sum(revenue#108), sum(duration_hr#106), sum(miles#103), sum(delay_hr#1808), count(1)]
+Aggregate Attributes [5]: [sum(revenue#108)#1833, sum(duration_hr#106)#1834, sum(miles#103)#1835, sum(delay_hr#1808)#1836, count(1)#1837L]
+Results [8]: [pu#101, hour#109, daytype#110, sum(revenue#108)#1833 AS rev#1809, sum(duration_hr#106)#1834 AS hours#1810, sum(miles#103)#1835 AS miles#1811, sum(delay_hr#1808)#1836 AS delay_hr#1812, count(1)#1837L AS trips#1813L]
+
+(39) Project [codegen id : 5]
+Output [10]: [pu#101, hour#109, daytype#110, rev#1809, hours#1810, miles#1811, delay_hr#1812, trips#1813L, (rev#1809 / hours#1810) AS yield_hr#1838, (miles#1811 / hours#1810) AS speed#1839]
+Input [8]: [pu#101, hour#109, daytype#110, rev#1809, hours#1810, miles#1811, delay_hr#1812, trips#1813L]
+
+(40) InMemoryTableScan
+Output [2]: [pu#1842, ff_yield_zone#1859]
+Arguments: [pu#1842, ff_yield_zone#1859], [isnotnull(pu#1842)]
+
+(41) InMemoryRelation
+Arguments: [pu#1842, ff_speed_zone#1858, ff_yield_zone#1859, n_night#1857L], StorageLevel(disk, memory, deserialized, 1 replicas)
+
+(42) Filter [codegen id : 4]
+Input [2]: [pu#1842, ff_yield_zone#1859]
+Condition : isnotnull(pu#1842)
+
+(43) BroadcastExchange
+Input [2]: [pu#1842, ff_yield_zone#1859]
+Arguments: HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=800]
+
+(44) BroadcastHashJoin [codegen id : 5]
+Left keys [1]: [pu#101]
+Right keys [1]: [pu#1842]
+Join type: Inner
+Join condition: None
+
+(45) Project [codegen id : 5]
+Output [12]: [pu#101, hour#109, daytype#110, rev#1809, hours#1810, miles#1811, delay_hr#1812, trips#1813L, yield_hr#1838, speed#1839, ff_yield_zone#1859, (ff_yield_zone#1859 - yield_hr#1838) AS yield_gap#1861]
+Input [12]: [pu#101, hour#109, daytype#110, rev#1809, hours#1810, miles#1811, delay_hr#1812, trips#1813L, yield_hr#1838, speed#1839, pu#1842, ff_yield_zone#1859]
+
+(46) Project [codegen id : 5]
+Output [13]: [pu#101, hour#109, daytype#110, rev#1809, hours#1810, miles#1811, delay_hr#1812, trips#1813L, yield_hr#1838, speed#1839, ff_yield_zone#1859, yield_gap#1861, (yield_gap#1861 * hours#1810) AS forgone#1862]
+Input [12]: [pu#101, hour#109, daytype#110, rev#1809, hours#1810, miles#1811, delay_hr#1812, trips#1813L, yield_hr#1838, speed#1839, ff_yield_zone#1859, yield_gap#1861]
+
+

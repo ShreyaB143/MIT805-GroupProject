@@ -1,0 +1,20 @@
+metric,value
+Months,48
+Raw catalogue,~31 GB
+Subset on disk,2.58 GiB
+Filtered (processed),4.17 GiB
+Rows read,"167,858,646"
+Rows retained,"156,964,574"
+Retention,93.51\%
+Baseline routes,"3,599"
+Route-window cells,"14,514"
+"Forgone, all zones",\$939.8M
+"Forgone, excl. airports",\$678.2M
+Slowest hour,17:00
+DataFrame runtime,7.5 s
+RDD runtime,317.2 s
+RDD penalty,42$\times$
+reduceByKey shuffle write,0.207 MB
+groupByKey shuffle write,29.112 MB
+Combiner reduction,140$\times$
+Max skew ratio,3.7$\times$

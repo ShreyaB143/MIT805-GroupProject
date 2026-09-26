@@ -1,0 +1,5 @@
+variant,trips,slowest_hour,min_speed,peak_yield,trough_yield
+headline,156964574,17,10.65,105.21,70.24
+no_airports,141989902,15,8.46,92.2,67.5
+pre_2025_only,113501876,17,10.78,109.87,69.42
+2025_only,43462698,15,10.24,99.25,72.35

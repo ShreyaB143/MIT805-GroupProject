@@ -1,4 +1,4 @@
-MIT805 Part 2 curated schema - frozen 2026-09-25
+MIT805 Part 2 filtered schema - frozen 2026-09-25
 pickup_ts      timestamp_ntz
 dropoff_ts     timestamp_ntz
 pu             int

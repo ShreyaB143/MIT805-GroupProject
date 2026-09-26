@@ -1,0 +1,155 @@
+== Physical Plan ==
+InMemoryTableScan (1)
+   +- InMemoryRelation (2)
+         +- * Project (27)
+            +- * Project (26)
+               +- * BroadcastHashJoin Inner BuildRight (25)
+                  :- * Project (11)
+                  :  +- * Filter (10)
+                  :     +- * HashAggregate (9)
+                  :        +- Exchange (8)
+                  :           +- * HashAggregate (7)
+                  :              +- * Project (6)
+                  :                 +- * Filter (5)
+                  :                    +- * ColumnarToRow (4)
+                  :                       +- Scan parquet  (3)
+                  +- BroadcastExchange (24)
+                     +- * Filter (23)
+                        +- InMemoryTableScan (12) (columnarIn=false, columnarOut=true)
+                              +- InMemoryRelation (13)
+                                    +- * Project (22)
+                                       +- * Filter (21)
+                                          +- * HashAggregate (20)
+                                             +- Exchange (19)
+                                                +- * HashAggregate (18)
+                                                   +- * Project (17)
+                                                      +- * Filter (16)
+                                                         +- * ColumnarToRow (15)
+                                                            +- Scan parquet  (14)
+
+
+(1) InMemoryTableScan
+Output [13]: [pu#101, do#102, window#591, m#592, h#593, rev#594, trips#595L, speed#615, ff_speed#198, n_night#180L, tti#631, delay_hr_total#632, delay_min_per_trip#633]
+Arguments: [pu#101, do#102, window#591, m#592, h#593, rev#594, trips#595L, speed#615, ff_speed#198, n_night#180L, tti#631, delay_hr_total#632, delay_min_per_trip#633]
+
+(2) InMemoryRelation
+Arguments: [pu#101, do#102, window#591, m#592, h#593, rev#594, trips#595L, speed#615, ff_speed#198, n_night#180L, tti#631, delay_hr_total#632, delay_min_per_trip#633], StorageLevel(disk, memory, deserialized, 1 replicas)
+
+(3) Scan parquet 
+Output [9]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+Batched: true
+Location: InMemoryFileIndex [file:/Users/shreyabharat/Projects/MIT805-GroupProject/data/filtered]
+PushedFilters: [IsNotNull(pu), IsNotNull(do)]
+ReadSchema: struct<pu:int,do:int,miles:double,duration_hr:double,revenue:double,hour:int,daytype:string>
+
+(4) ColumnarToRow [codegen id : 1]
+Input [9]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+
+(5) Filter [codegen id : 1]
+Input [9]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+Condition : (isnotnull(pu#101) AND isnotnull(do#102))
+
+(6) Project [codegen id : 1]
+Output [6]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, CASE WHEN (daytype#110 = weekend) THEN weekend WHEN ((hour#109 >= 7) AND (hour#109 <= 9)) THEN am_peak WHEN ((hour#109 >= 16) AND (hour#109 <= 18)) THEN pm_peak WHEN ((hour#109 >= 10) AND (hour#109 <= 15)) THEN midday ELSE night END AS window#591]
+Input [9]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, hour#109, daytype#110, year#111, month#112]
+
+(7) HashAggregate [codegen id : 1]
+Input [6]: [pu#101, do#102, miles#103, duration_hr#106, revenue#108, window#591]
+Keys [3]: [pu#101, do#102, window#591]
+Functions [4]: [partial_sum(miles#103), partial_sum(duration_hr#106), partial_sum(revenue#108), partial_count(1)]
+Aggregate Attributes [4]: [sum#714, sum#715, sum#716, count#717L]
+Results [7]: [pu#101, do#102, window#591, sum#718, sum#719, sum#720, count#721L]
+
+(8) Exchange
+Input [7]: [pu#101, do#102, window#591, sum#718, sum#719, sum#720, count#721L]
+Arguments: hashpartitioning(pu#101, do#102, window#591, 32), ENSURE_REQUIREMENTS, [plan_id=416]
+
+(9) HashAggregate [codegen id : 3]
+Input [7]: [pu#101, do#102, window#591, sum#718, sum#719, sum#720, count#721L]
+Keys [3]: [pu#101, do#102, window#591]
+Functions [4]: [sum(miles#103), sum(duration_hr#106), sum(revenue#108), count(1)]
+Aggregate Attributes [4]: [sum(miles#103)#611, sum(duration_hr#106)#612, sum(revenue#108)#613, count(1)#614L]
+Results [7]: [pu#101, do#102, window#591, sum(miles#103)#611 AS m#592, sum(duration_hr#106)#612 AS h#593, sum(revenue#108)#613 AS rev#594, count(1)#614L AS trips#595L]
+
+(10) Filter [codegen id : 3]
+Input [7]: [pu#101, do#102, window#591, m#592, h#593, rev#594, trips#595L]
+Condition : (trips#595L >= 500)
+
+(11) Project [codegen id : 3]
+Output [8]: [pu#101, do#102, window#591, m#592, h#593, rev#594, trips#595L, (m#592 / h#593) AS speed#615]
+Input [7]: [pu#101, do#102, window#591, m#592, h#593, rev#594, trips#595L]
+
+(12) InMemoryTableScan
+Output [4]: [pu#618, do#619, ff_speed#198, n_night#180L]
+Arguments: [pu#618, do#619, ff_speed#198, n_night#180L], [isnotnull(pu#618), isnotnull(do#619)]
+
+(13) InMemoryRelation
+Arguments: [pu#618, do#619, ff_speed#198, n_night#180L], StorageLevel(disk, memory, deserialized, 1 replicas)
+
+(14) Scan parquet 
+Output [8]: [pu#101, do#102, miles#103, duration_hr#106, hour#109, daytype#110, year#111, month#112]
+Batched: true
+Location: InMemoryFileIndex [file:/Users/shreyabharat/Projects/MIT805-GroupProject/data/filtered]
+PushedFilters: [IsNotNull(hour), IsNotNull(daytype), GreaterThanOrEqual(hour,1), LessThanOrEqual(hour,4), EqualTo(daytype,weekday)]
+ReadSchema: struct<pu:int,do:int,miles:double,duration_hr:double,hour:int,daytype:string>
+
+(15) ColumnarToRow [codegen id : 1]
+Input [8]: [pu#101, do#102, miles#103, duration_hr#106, hour#109, daytype#110, year#111, month#112]
+
+(16) Filter [codegen id : 1]
+Input [8]: [pu#101, do#102, miles#103, duration_hr#106, hour#109, daytype#110, year#111, month#112]
+Condition : ((((isnotnull(hour#109) AND isnotnull(daytype#110)) AND (hour#109 >= 1)) AND (hour#109 <= 4)) AND (daytype#110 = weekday))
+
+(17) Project [codegen id : 1]
+Output [4]: [pu#101, do#102, miles#103, duration_hr#106]
+Input [8]: [pu#101, do#102, miles#103, duration_hr#106, hour#109, daytype#110, year#111, month#112]
+
+(18) HashAggregate [codegen id : 1]
+Input [4]: [pu#101, do#102, miles#103, duration_hr#106]
+Keys [2]: [pu#101, do#102]
+Functions [3]: [partial_sum(miles#103), partial_sum(duration_hr#106), partial_count(1)]
+Aggregate Attributes [3]: [sum#199, sum#200, count#201L]
+Results [5]: [pu#101, do#102, sum#202, sum#203, count#204L]
+
+(19) Exchange
+Input [5]: [pu#101, do#102, sum#202, sum#203, count#204L]
+Arguments: hashpartitioning(pu#101, do#102, 32), ENSURE_REQUIREMENTS, [plan_id=225]
+
+(20) HashAggregate [codegen id : 2]
+Input [5]: [pu#101, do#102, sum#202, sum#203, count#204L]
+Keys [2]: [pu#101, do#102]
+Functions [3]: [sum(miles#103), sum(duration_hr#106), count(1)]
+Aggregate Attributes [3]: [sum(miles#103)#195, sum(duration_hr#106)#196, count(1)#197L]
+Results [5]: [pu#101, do#102, sum(miles#103)#195 AS m#178, sum(duration_hr#106)#196 AS h#179, count(1)#197L AS n_night#180L]
+
+(21) Filter [codegen id : 2]
+Input [5]: [pu#101, do#102, m#178, h#179, n_night#180L]
+Condition : (n_night#180L >= 100)
+
+(22) Project [codegen id : 2]
+Output [4]: [pu#101, do#102, (m#178 / h#179) AS ff_speed#198, n_night#180L]
+Input [5]: [pu#101, do#102, m#178, h#179, n_night#180L]
+
+(23) Filter [codegen id : 2]
+Input [4]: [pu#618, do#619, ff_speed#198, n_night#180L]
+Condition : (isnotnull(pu#618) AND isnotnull(do#619))
+
+(24) BroadcastExchange
+Input [4]: [pu#618, do#619, ff_speed#198, n_night#180L]
+Arguments: HashedRelationBroadcastMode(List((shiftleft(cast(input[0, int, false] as bigint), 32) | (cast(input[1, int, false] as bigint) & 4294967295))),false), [plan_id=424]
+
+(25) BroadcastHashJoin [codegen id : 3]
+Left keys [2]: [pu#101, do#102]
+Right keys [2]: [pu#618, do#619]
+Join type: Inner
+Join condition: None
+
+(26) Project [codegen id : 3]
+Output [12]: [pu#101, do#102, window#591, m#592, h#593, rev#594, trips#595L, speed#615, ff_speed#198, n_night#180L, (ff_speed#198 / speed#615) AS tti#631, (h#593 - (m#592 / ff_speed#198)) AS delay_hr_total#632]
+Input [12]: [pu#101, do#102, window#591, m#592, h#593, rev#594, trips#595L, speed#615, pu#618, do#619, ff_speed#198, n_night#180L]
+
+(27) Project [codegen id : 3]
+Output [13]: [pu#101, do#102, window#591, m#592, h#593, rev#594, trips#595L, speed#615, ff_speed#198, n_night#180L, tti#631, delay_hr_total#632, ((delay_hr_total#632 * 60.0) / cast(trips#595L as double)) AS delay_min_per_trip#633]
+Input [12]: [pu#101, do#102, window#591, m#592, h#593, rev#594, trips#595L, speed#615, ff_speed#198, n_night#180L, tti#631, delay_hr_total#632]
+
+

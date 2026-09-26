@@ -1,0 +1,19 @@
+{
+  "months": 48,
+  "working_gib": 2.58,
+  "filtered_gib": 4.17,
+  "rows_read": 167858646,
+  "rows_filtered": 156964574,
+  "retention_pct": 93.51,
+  "baseline_routes": 3599,
+  "route_window_cells": 14514,
+  "forgone_all": 939844819,
+  "forgone_no_airports": 678172641,
+  "slowest_hour": 17,
+  "t_dataframe_s": 7.5,
+  "t_rdd_s": 317.2,
+  "rdd_penalty_x": 42.4,
+  "reduce_shuffle_mb": 0.207,
+  "group_shuffle_mb": 29.112,
+  "max_skew_ratio": 3.7
+}
