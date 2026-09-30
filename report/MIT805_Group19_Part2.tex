@@ -45,7 +45,7 @@ Processed by PySpark & 4.17 GiB \\\bottomrule
 \end{tabular}
 \end{table}
 
-The subset chosen was data between January  2022 and January 2025. This subset was chosen to exclude data collected during the COVID-19 period, which would have distorted the data towards abnormal operating conditions if it were included. The subset also contains data from January 2025, during which there was a congestion-pricing change, making the data relevant to current policies. \\
+The subset chosen was data between January  2022 and December 2025. This subset was chosen to exclude data collected during the COVID-19 period, which would have distorted the data towards abnormal operating conditions if it were included. The subset also contains data from January 2025, during which there was a congestion-pricing change, making the data relevant to current policies. \\
 
 Table \ref{tab:data-filtering} provides a summary of the filtering that was conducted on the raw dataset, in order to derive the data subset that was used in this part of the project. Filtering was done to ensure that any incorrect data entries were excluded from the analysis, and that only trips in the specified time period were included. Each filter was applied independently to the dataset, resulting in overlap between the filtered rows. After applying the filters consecutively to the raw dataset, a total of 10,894,072 rows were removed. \\
 
@@ -72,10 +72,24 @@ Final subset & 156,964,574 & 93.51\% \\\bottomrule
 One of the challenges with the dataset was in handling some of the inaccuracies present, which resulted in the need to filter the raw dataset. For example, it was found that 0.36\% of trips has a recorded a drop-off at, or before, the pick-up, resulting in zero or negative trip durations.  
 
 \section{Processing objective and analytical question}
-xxx
+This study aims to answer the following research questions:
+RQ1: Where does congestion cost the yellow taxi fleet the most revenue?
+RQ2: Which routes experience the most congestion during peak hours?
+
+Both questions were answered by following the same methodology: a free-flow baseline was first determined, from which the time-loss per trip was calculated. This value was then converted into a monetary value. The same data records were utilised to answer both questions, with only the grouping key differing between the two executions. For RQ1, the data was grouped by (pickup zone, hour, weekday or weekend), and for RQ2 the data was grouped by (pickup zone, drop-off zone, time window). 
+
+For the free-flow baseline, off-peak trip data from the same dataset was used to derive the baseline. For each pickup-dropoff pair, the baseline was determined by analysing weekday trips between 01:00 am and 04:59 am by dividing the total distance travelled by the total duration. An assumption was made that trips during this time window will experience the least congestion during the weekdays, and will therefore provide a baseline that peak-traffic trips can be compared to. To ensure an accurate baseline was generated, the study only included routes with more than 100 trips in the baseline. This resulted in 3,599 routes being included in the study. Each route was compared with its own respective baseline, instead of using an overall average, to ensure that results were an accurate representation of each route. If an average baseline was used throughout, the results may have been skewed by high-traffic routes, such as airport routes, which would still experience a higher volume of trips during the off-peak hours compared to routes in quieter residential areas. 
+
+Four measures were obtained after the baselines were constructed:
+1. Travel Time Index (TTI): free-flow baseline traffic speed divided by the actual speed.
+2. Delay hours: actual trip duration minus the duration of the trip if taken at the free-flow speed.
+3. Yield: revenue per hour generated. 
+4. Revenue lost / forgone: the difference between the estimated baseline yield (without congestion) and the actual yield, multiplied by the total hours worked. 
+
+The research questions were chosen to outline the overall affect of congestion on revenue generated across the routes travelled. For yellow taxi trips, the meter charges for elapsed time as well as distance. During peak congestion trips, the fare of the individual trip increases, while the number of trips that the driver completes decreases for that time period. The revenue generated per vehicle hour is therefore affected. For this study, revenue was calculated as the sum of the base fare amount and the tip amount, excluding tolls and surcharges.
 
 \section{Mapping / transformation}
-xxx
+Figure \ref{fig:mapping} shows the RDD formulation that was used for the map function implementation. The aim of the mapping function is to produce the key that is used to answer the research questions. 
 
 \begin{figure}
     \centering
@@ -85,13 +99,47 @@ xxx
 \end{figure}
 
 \section{Shuffle / grouping}
-xxx
+Rows that share the same key were first grouped together before they could be reduced. This was done by assigning each record to a partition according to a hash of its key. Due to this method of partitioning, the number of records assigned to a key differed across all of the keys, resulting in an uneven workload distribution across the reduceBy and groupBy tasks. 
+
+The volume of data crossing the network is largely dependent on whether the reduction is combined with the map function before the shuffle. In order to measure the difference between the reduceBy and groupBy operations, both aggregations were computed over a single month of data. The reduceByKey applied the reduction locally within each partition before the exchange, while the groupByKey did not. The results from this comparison are shown in table \ref{tab:shuffle-grouping}. Both operations produced 10,142 rows of results. 
+
+\begin{table}[t]
+\centering
+\caption{Comparison of reduceBy and groupBy operations}
+\label{tab:shuffle-grouping}
+\begin{tabular}{lrr}\toprule
+Operation & Shuffle write & Execution time \\\midrule
+reduceByKey & 0.207 MB & 11.1 s \\
+groupByKey & 29.112 MB & 14.3 s \\\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Reduction / aggregation}
-xxx
+The reduce function must return the same result regardless of the order in which the partial results are combined. In the case of Spark, the partial results were combined concurrently across the tasks, and then once again at the reducer, which did not guarantee a fixed order. In order to work around this challenge, the rates calculated were calculated as sum values, and not as averages. For example, in equation \ref{eq:1}, the speed was calculated as the sum of the trip distance, d, divided by the total trip duration, t, for the group.
+
+\begin{equation}
+\label{eq:1}
+\bar{v}_{g} = \frac{\sum_{i \in g} d_{i}}{\sum_{i \in g} t_{i}}
+\end{equation}\\
 
 \section{Spark execution and DAG}
 xxx
+
+\begin{table}[t]
+\centering
+\footnotesize
+\caption{Stage metrics, significant stages only}
+\label{tab:spark-DAG}
+\begin{tabular}{llrrrr}\toprule
+Stage & Role & Tasks & Med. (ms) & Shuffle W & Skew \\\midrule
+4 & Filtering write & 29 & 11,018 & 7,766 MB & 1.3 \\
+5 & Filtering read & 32 & 16,250 & --- & 3.7 \\
+21 & RQ2 aggregation & 48 & 1,165 & 108.3 MB & 3.0 \\
+37 & RQ1 aggregation & 48 & 1,356 & 17.7 MB & 2.5 \\
+54 & DataFrame twin & 48 & 1,127 & 11.6 MB & 1.3 \\
+56 & RDD twin & 48 & 52,202 & 10.2 MB & 1.2 \\\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Results and technical interpretation}
 xxx
