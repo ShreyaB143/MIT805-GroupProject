@@ -39,9 +39,9 @@ Table \ref{tab:dataset-sizes} outlines the raw dataset, and the three data subse
 \begin{tabular}{lr}\toprule
 Tier & Size \\\midrule
 Raw catalogue & $\sim$31 GB \\
-Working set (Part 1) & 12.15 GiB \\
+Working set (Part 1) & 12.15 GB \\
 Subset (Part 2) & 2.58 GiB \\
-Processed by PySpark & 4.17 GiB \\\bottomrule
+Processed by PySpark & 4.17 GB \\\bottomrule
 \end{tabular}
 \end{table}
 
@@ -69,7 +69,7 @@ Final subset & 156,964,574 & 93.51\% \\\bottomrule
 \end{tabular}
 \end{table}
 
-One of the challenges with the dataset was in handling some of the inaccuracies present, which resulted in the need to filter the raw dataset. For example, it was found that 0.36\% of trips had a recorded a drop-off at, or before, the pick-up, resulting in zero or negative trip durations.  \\
+One of the challenges with the dataset was in handling some of the inaccuracies present, which resulted in the need to filter the raw dataset. For example, it was found that 0.36\% of trips had a recorded drop-off at, or before, the pick-up, resulting in zero or negative trip durations.  \\
 
 \section{Processing objective and analytical question}
 This study aims to answer the following research questions:
@@ -86,14 +86,14 @@ Four measures were obtained after the baselines were constructed:
 3. Yield: revenue per hour generated. 
 4. Revenue lost / forgone: the difference between the estimated baseline yield (without congestion) and the actual yield, multiplied by the total hours worked. \\
 
-The research questions were chosen to outline the overall affect of congestion on revenue generated across the routes travelled. For yellow taxi trips, the meter charges for elapsed time as well as distance. During peak congestion trips, the fare of the individual trip increases, while the number of trips that the driver completes decreases for that time period. The revenue generated per vehicle hour is therefore affected. For this study, revenue was calculated as the sum of the base fare amount and the tip amount, excluding tolls and surcharges.\\
+The research questions were chosen to outline the overall effect of congestion on revenue generated across the routes travelled. For yellow taxi trips, the meter charges for elapsed time as well as distance. During peak congestion trips, the fare of the individual trip increases, while the number of trips that the driver completes decreases for that time period. The revenue generated per vehicle hour is therefore affected. For this study, revenue was calculated as the sum of the base fare amount and the tip amount, excluding tolls and surcharges.\\
 
 \section{Mapping / transformation}
 Figure \ref{fig:mapping} shows the RDD formulation that was used for the map function implementation. The aim of the mapping function is to produce the key that is used to answer the research questions. 
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{Map.png}
+    \includegraphics[width=0.9\columnwidth]{Map.png}
     \caption{RDD formulation for mapping}
     \label{fig:mapping}
 \end{figure}
@@ -124,7 +124,7 @@ The reduce function must return the same result regardless of the order in which
 \bar{v}_{g} = \frac{\sum_{i \in g} d_{i}}{\sum_{i \in g} t_{i}}
 \end{equation}\\
 
-The following values were summed during the shuffle function: distance, duration, revenue, delay hours, and trip count. The rates were calculated once, after the completion of the reduction step. The reduction process was verified by first implementing using RDD (using the map and reduceByKey operations), and then mirroring the process with a DataFrame version (using groupBy and aggregate operations). The results were compared and were found to match across all 12,270 rows computed. \\
+The following values were summed during the shuffle reduction: distance, duration, revenue, delay hours, and trip count. The rates were calculated once, after the completion of the reduction step. The reduction process was verified by first implementing using RDD (using the map and reduceByKey operations), and then mirroring the process with a DataFrame version (using groupBy and aggregate operations). The results were compared and were found to match across all 12,270 rows computed. \\
 
 The reduction process was executed to produce individual result sets for RQ1 and RQ2. For RQ1, a total of 12,173 rows were produced, and for RQ2 a total of 14,514 rows were produced, each with over 500 trips. \\
 
@@ -133,23 +133,27 @@ For the Spark execution, the transformations were collected into a directed acyc
 
 Figure \ref{fig:rq1-exec} shows the plan that was executed to obtain the results for RQ1, and figure \ref{fig:rq2-exec} shows the execution plan for RQ2. The execution plan was obtained using the code block shown in figure \ref{fig:spark-exec}.\\
 
+The first part of the Spark execution involved scanning the Parquet files to keep only the required rows and columns, and then aggregating the data within each partition. Exchange hash partitioning was then performed on the grouping key, after which the data was again aggregated, performing the shuffle operation. BroadcastHashJoin was used to add the zone lookup data, since the lookup table was fairly small compared to the primary dataset.\\
+
+The two aggregation stages were also written against the RDD API, which used the reduceByKey. It was found that the RDD execution ran approximately 42 times slower than the DataFrame execution. One possible reason for this difference in execution times could be that the DataFrame execution only read the required columns from the Parquet files, while the RDD execution built a Python object for every row.  
+
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{rq1execution.png}
+    \includegraphics[width=0.9\columnwidth]{rq1execution.png}
     \caption{Spark execution for RQ1}
     \label{fig:rq1-exec}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{rq2execution.png}
+    \includegraphics[width=0.9\columnwidth]{rq2execution.png}
     \caption{Spark execution for RQ2}
     \label{fig:rq2-exec}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{spark.png}
+    \includegraphics[width=0.9\columnwidth]{spark.png}
     \caption{Spark execution plan}
     \label{fig:spark-exec}
 \end{figure}
