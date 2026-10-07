@@ -32,7 +32,7 @@ of Use, and also mirrored on the AWS Open Data Registry. The dataset does not co
 
 Table \ref{tab:dataset-sizes} outlines the raw dataset, and the three data subsets used throughout this study. The working dataset, from part 1, contained 139 months of data, while the subset used in part 2 contained 48 months of data (167,858,646 rows in total). The total size of data processed by PySpark was 4.17 GB, spanning 156,964,574 rows in total.\\
 
-\begin{table}[t]
+\begin{table}[b]
 \centering
 \caption{Dataset and subset sizes}
 \label{tab:dataset-sizes}
@@ -49,7 +49,7 @@ The subset chosen was data between January  2022 and December 2025. This subset 
 
 Table \ref{tab:data-filtering} provides a summary of the filtering that was conducted on the raw dataset, in order to derive the data subset that was used in this part of the project. Filtering was done to ensure that any incorrect data entries were excluded from the analysis, and that only trips in the specified time period were included. Each filter was applied independently to the dataset, resulting in overlap between the filtered rows. After applying the filters together to the raw dataset, a total of 10,894,072 rows were removed. \\
 
-\begin{table}[t]
+\begin{table}[b]
 \centering
 \footnotesize
 \caption{Dataset filtering}
@@ -73,8 +73,8 @@ One of the challenges with the dataset was in handling some of the inaccuracies 
 
 \section{Processing objective and analytical question}
 This study aims to answer the following research questions:
-RQ1: Where does congestion cost the yellow taxi fleet the most revenue?
-RQ2: Which routes experience the most congestion during peak hours?
+RQ1: Where does congestion cost the yellow taxi fleet the most revenue?\\
+RQ2: Which routes experience the most congestion during peak hours?\\
 
 Both questions were answered by following the same methodology: a free-flow baseline was first determined, from which the time-loss per trip was calculated. This value was then converted into a monetary value. The same data records were utilised to answer both questions, with only the grouping key differing between the two executions. For RQ1, the data was grouped by (pickup zone, hour, weekday or weekend), and for RQ2 the data was grouped by (pickup zone, drop-off zone, time window). \\
 
@@ -175,13 +175,37 @@ Stage & Role & Tasks & Med. (ms) & Shuffle W & Skew \\\midrule
 \end{table}
 
 \section{Results and technical interpretation}
-xxx
+The purpose of this analysis was to identify which NYC taxi routes experience the highest levels of congestion during peak hours and to determine how congestion affects revenue generation. Congestion was measured using the Travel Time Index (TTI), it compares the travel time during peak hours to the travel time under off-peak hours. A higher TTI indicates greater congestion.
 
-\section{Visualisation}
-xxx
+XXXXFIGURE1XXXX
+
+Figure 1 above shows that the highest levels of congestion occurred on routes connected to business centres and airports. These routes experienced longer travel times during peak periods compared to off-peak hours. It is evident from the results that congestion is concentrated in areas with high travel demand. Business hubs such as Midtown Manhattan and transport hubs such as JFK and LaGuardia airports attract high volumes of commuters and travellers, resulting in increased traffic volumes and travel delays.
+
+XXXXFIGURE2XXXX
+
+It can be seen from figure2 above that congestion was generally higher during the PM peak period than during the AM peak period. Evening travel demand appears to create greater pressure on the road network, mainly around business districts and airports. Drivers are, therefore, more likely to experience delays during afternoon and evening shifts. 
+
+XXXXFIGURE3XXXX
+
+The two graphs in figure 3 above show that congestion has a mixed effect on revenue. It was observed that Revenue per trip increases as congestion increases as passengers spend more time in traffic and fares continue to accumulate.\\
+
+Revenue per hour on the other hand tends to decrease as congestion becomes more severe. Although drivers earn more from individual trips, they complete fewer trips within the same amount of time. These result show that higher fares do not necessarily lead to higher overall earnings. This suggests that moderate congestion may benefit drivers through higher fares, but severe congestion reduces overall profitability.
 
 \section{Business / societal interpretation and value}
-xxx
+There is a lot of value that can be extracted by different stakeholders from these insights such as Drivers, Taxi companies and Traffic management agencies and most importantly to optimise revenue. Drivers can use these insights to identify routes and operating times that offer the best balance between travel time and earnings. They would also be able to operate more efficiently by avoiding highly congested routes and improve hourly income and reduce unproductive time spent in traffic.\\
+
+Taxi companies can use congestion information when planning shifts and allocating vehicles. Better route selection can optimise fleet utilisation and reduce operating inefficiencies caused by traffic delays. Traffic management agencies can use the results to identify routes that contribute most to congestion. These routes can be prioritised for traffic management measures, infrastructure improvements and congestion-reduction strategies.
+
+\section{Limitations}
+Several limitations should be considered when interpreting the findings:
+Speed was calculated using trip distance and trip duration rather than actual GPS traffic measurements.
+Cash tips were not recorded in the dataset and therefore actual driver earnings may be higher than reported.
+Weather conditions, accidents, road closures and special events were not included in the analysis.
+The study focused only on NYC Yellow Taxi data and excluded ride-hailing services such as Uber and Lyft.
+The analysis identifies relationships between congestion and revenue but does not prove cause-and-effect relationships.
+
+\section{Conclusions}
+This study found that the highest levels of congestion occurred on NYC taxi routes connected to major business and airport areas, with evening peak hours experiencing more congestion than morning peak hours. Although congestion can increase earnings from individual trips, heavy congestion reduces revenue per hour because drivers spend more time in traffic and complete fewer trips. In conclusion, moderate congestion may improve trip revenue, but severe congestion lowers productivity and profitability.
 
 \section{GitHub Repository}
 The project setup and code can be found in the following GitHub repo: \url{https://github.com/ShreyaB143/MIT805-GroupProject}
