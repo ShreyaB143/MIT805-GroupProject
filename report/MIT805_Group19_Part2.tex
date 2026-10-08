@@ -177,7 +177,7 @@ Stage & Role & Tasks & Med. (ms) & Shuffle W & Skew \\\midrule
 \end{table}
 
 \section{Results and technical interpretation}
-The purpose of this analysis was to identify which NYC taxi routes experience the highest levels of congestion during peak hours and to determine how congestion affects revenue generation. Congestion was measured using the Travel Time Index (TTI), it compares the travel time during peak hours to the travel time under off-peak hours. A higher TTI indicates greater congestion.
+The purpose of this analysis was to identify which NYC taxi routes experience the highest levels of congestion during peak hours and to determine how congestion affects revenue generation. Congestion was measured using the Travel Time Index (TTI), it compares the travel time during peak hours to the travel time under off-peak hours. A higher TTI indicates greater congestion.\\
 
 \begin{figure}
     \centering
@@ -186,7 +186,7 @@ The purpose of this analysis was to identify which NYC taxi routes experience th
     \label{fig:5}
 \end{figure}
 
-Figure \ref{fig:5} shows that the highest levels of congestion occurred on routes connected to business centres and airports. These routes experienced longer travel times during peak periods compared to off-peak hours. It is evident from the results that congestion is concentrated in areas with high travel demand. Business hubs such as Midtown Manhattan and transport hubs such as JFK and LaGuardia airports attract high volumes of commuters and travellers, resulting in increased traffic volumes and travel delays.
+Figure \ref{fig:5} shows that the highest levels of congestion occurred on routes connected to business centres and airports. These routes experienced longer travel times during peak periods compared to off-peak hours. It is evident from the results that congestion is concentrated in areas with high travel demand. Business hubs such as Midtown Manhattan and transport hubs such as JFK and LaGuardia airports attract high volumes of commuters and travellers, resulting in increased traffic volumes and travel delays.\\
 
 \begin{figure}
     \centering
@@ -195,7 +195,16 @@ Figure \ref{fig:5} shows that the highest levels of congestion occurred on route
     \label{fig:6}
 \end{figure}
 
-It can be seen from figure \ref{fig:6} that congestion was generally higher during the PM peak period than during the AM peak period. Evening travel demand appears to create greater pressure on the road network, mainly around business districts and airports. Drivers are, therefore, more likely to experience delays during afternoon and evening shifts. 
+It can be seen from figure \ref{fig:6} that congestion was generally higher during the PM peak period than during the AM peak period. Evening travel demand appears to create greater pressure on the road network, mainly around business districts and airports. Drivers are, therefore, more likely to experience delays during afternoon and evening shifts.\\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Picture 1.png}
+    \caption{Congestion through the day}
+    \label{fig:congestion}
+\end{figure}
+
+The graphs in figure \ref{fig:congestion} that how congestion affects taxi operations in New York City. During weekday afternoon periods, almost half of total travel time is lost due to congestion, causing average speeds to drop to around 10 mph. These highly congested periods correspond with the lowest revenue per hour, showing that congestion reduces taxi productivity and earning potential. In contrast, low-congestion periods during the early morning hours allow faster travel speeds and generate the highest revenue levels. Managing congestion could improve both transportation efficiency and taxi industry revenue.\\
 
 \begin{figure}
     \centering
@@ -204,9 +213,27 @@ It can be seen from figure \ref{fig:6} that congestion was generally higher duri
     \label{fig:7}
 \end{figure}
 
-The two graphs in figure \ref{fig:7} show that congestion has a mixed effect on revenue. It was observed that Revenue per trip increases as congestion increases as passengers spend more time in traffic and fares continue to accumulate.\\
+The graphs in figure \ref{fig:7} show that congestion has a mixed effect on revenue. It was observed that Revenue per trip increases as congestion increases as passengers spend more time in traffic and fares continue to accumulate.\\
 
-Revenue per hour on the other hand tends to decrease as congestion becomes more severe. Although drivers earn more from individual trips, they complete fewer trips within the same amount of time. These result show that higher fares do not necessarily lead to higher overall earnings. This suggests that moderate congestion may benefit drivers through higher fares, but severe congestion reduces overall profitability.
+Revenue per hour on the other hand tends to decrease as congestion becomes more severe. Although drivers earn more from individual trips, they complete fewer trips within the same amount of time. These result show that higher fares do not necessarily lead to higher overall earnings. This suggests that moderate congestion may benefit drivers through higher fares, but severe congestion reduces overall profitability.\\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{revenue.png}
+    \caption{Revenue versus congestion on the same route}
+    \label{fig:revenue}
+\end{figure}
+
+To understand the relationship between congestion and earnings better, revenue was analysed across different congestion levels for the same route. From figure \ref{fig:revenue}, revenue per trip increases as congestion increases. When congestion more than doubled compared with the least congested period of the route, revenue per trip increased by roughly 21\%. This suggests that longer travel times result in slightly higher fares being charged to passengers. The opposite is true for revenue per hour. Revenue per hour decreases as congestion increase. At the highest congestion levels (TTI=2.0+), revenue per vehicle-hour dropped by roughly 42\%. While drivers earn slightly more from individual trips during congested conditions, the increase in trip revenue is not enough to compensate for the additional time spent in traffic.\\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{sensitivity_analysis.png}
+    \caption{Sensitivity analysis}
+    \label{fig:sensivity}
+\end{figure}
+
+A sensitivity analysis, shown in figure \ref{fig:sensivity}, was conducted to test whether the findings were robust and not driven by a specific subset of the data, such as airport trips or a particular time period. By conducting the analysis on different datasets (full sample, excluding airports, pre-2025 data, and 2025-only data), the study was able to verify that the relationship between congestion and revenue remained the same. The results are, therefore, reliable.
 
 \section{Business / societal interpretation and value}
 There is a lot of value that can be extracted by different stakeholders from these insights such as Drivers, Taxi companies and Traffic management agencies and most importantly to optimise revenue. Drivers can use these insights to identify routes and operating times that offer the best balance between travel time and earnings. They would also be able to operate more efficiently by avoiding highly congested routes and improve hourly income and reduce unproductive time spent in traffic.\\
