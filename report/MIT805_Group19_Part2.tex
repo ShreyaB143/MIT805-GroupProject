@@ -30,7 +30,7 @@ Data source: New York City Taxi and Limousine Commission (TLC) Trip Record Data
 (\url{https://d37ci6vzurychx.cloudfront.net/trip-data}), used under the NYC.gov Terms
 of Use, and also mirrored on the AWS Open Data Registry. The dataset does not contain any personally identifiable data. The data is published monthly by NYC TLC. \\
 
-Table \ref{tab:dataset-sizes} outlines the raw dataset, and the three data subsets used throughout this study. The working dataset, from part 1, contained 139 months of data, while the subset used in part 2 contained 48 months of data (167,858,646 rows in total). The total size of data processed by PySpark was 4.17 GB, spanning 156,964,574 rows in total.\\
+Table \ref{tab:dataset-sizes} outlines the raw dataset, and the three data subsets used throughout this study. The working dataset, from part 1, contained 139 months of data, while the subset used in part 2 contained 48 months of data (167,858,646 rows in total). The total size of data processed by PySpark was 4.17 GB, spanning 156,964,574 rows in total. The data processed by PySpark is larger than the subset due to the Parquet files being compressed on the disk compared to the data being decompressed into Spark.\\
 
 \begin{table}[b]
 \centering
@@ -40,7 +40,7 @@ Table \ref{tab:dataset-sizes} outlines the raw dataset, and the three data subse
 Tier & Size \\\midrule
 Raw catalogue & $\sim$31 GB \\
 Working set (Part 1) & 12.15 GB \\
-Subset (Part 2) & 2.58 GiB \\
+Subset (Part 2) & 2.58 GB \\
 Processed by PySpark & 4.17 GB \\\bottomrule
 \end{tabular}
 \end{table}
@@ -137,6 +137,8 @@ The first part of the Spark execution involved scanning the Parquet files to kee
 
 The two aggregation stages were also written against the RDD API, which used the reduceByKey. It was found that the RDD execution ran approximately 42 times slower than the DataFrame execution. One possible reason for this difference in execution times could be that the DataFrame execution only read the required columns from the Parquet files, while the RDD execution built a Python object for every row.  
 
+Hadoop and Spark differ in the following manner: when working with Hadoop MapReduce, the data output by the map stage is written to the disk, after which the shuffle and reduce stages are conducted as separate jobs. In Spark, results are kept in memory instead of being written to the disk after each stage.
+
 \begin{figure}
     \centering
     \includegraphics[width=0.9\columnwidth]{rq1execution.png}
@@ -222,7 +224,9 @@ The analysis identifies relationships between congestion and revenue but does no
 \section{Conclusions}
 This study found that the highest levels of congestion occurred on NYC taxi routes connected to major business and airport areas, with evening peak hours experiencing more congestion than morning peak hours. Although congestion can increase earnings from individual trips, heavy congestion reduces revenue per hour because drivers spend more time in traffic and complete fewer trips. In conclusion, moderate congestion may improve trip revenue, but severe congestion lowers productivity and profitability.
 
-\section{GitHub Repository}
+\section{GitHub Repository and Video Presentation}
 The project setup and code can be found in the following GitHub repo: \url{https://github.com/ShreyaB143/MIT805-GroupProject}
+
+The recorded presentation can be found through the following link: \url{https://drive.google.com/file/d/1RHd2-ZUbhIqOVprFXTNiTotugnPBbPRl/view?usp=share_link}
 
 \end{document}
