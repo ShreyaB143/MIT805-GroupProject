@@ -177,17 +177,32 @@ Stage & Role & Tasks & Med. (ms) & Shuffle W & Skew \\\midrule
 \section{Results and technical interpretation}
 The purpose of this analysis was to identify which NYC taxi routes experience the highest levels of congestion during peak hours and to determine how congestion affects revenue generation. Congestion was measured using the Travel Time Index (TTI), it compares the travel time during peak hours to the travel time under off-peak hours. A higher TTI indicates greater congestion.
 
-XXXXFIGURE1XXXX
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Analysis_Figure1.png}
+    \caption{Top ten most congested routes}
+    \label{fig:5}
+\end{figure}
 
-Figure 1 above shows that the highest levels of congestion occurred on routes connected to business centres and airports. These routes experienced longer travel times during peak periods compared to off-peak hours. It is evident from the results that congestion is concentrated in areas with high travel demand. Business hubs such as Midtown Manhattan and transport hubs such as JFK and LaGuardia airports attract high volumes of commuters and travellers, resulting in increased traffic volumes and travel delays.
+Figure \ref{fig:5} shows that the highest levels of congestion occurred on routes connected to business centres and airports. These routes experienced longer travel times during peak periods compared to off-peak hours. It is evident from the results that congestion is concentrated in areas with high travel demand. Business hubs such as Midtown Manhattan and transport hubs such as JFK and LaGuardia airports attract high volumes of commuters and travellers, resulting in increased traffic volumes and travel delays.
 
-XXXXFIGURE2XXXX
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Analysis_Figure2.png}
+    \caption{AM vs PM traffic congestion comparison}
+    \label{fig:6}
+\end{figure}
 
-It can be seen from figure2 above that congestion was generally higher during the PM peak period than during the AM peak period. Evening travel demand appears to create greater pressure on the road network, mainly around business districts and airports. Drivers are, therefore, more likely to experience delays during afternoon and evening shifts. 
+It can be seen from figure \ref{fig:6} that congestion was generally higher during the PM peak period than during the AM peak period. Evening travel demand appears to create greater pressure on the road network, mainly around business districts and airports. Drivers are, therefore, more likely to experience delays during afternoon and evening shifts. 
 
-XXXXFIGURE3XXXX
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Analysis_Figure3.png}
+    \caption{Congestion vs revenue scatter plot}
+    \label{fig:7}
+\end{figure}
 
-The two graphs in figure 3 above show that congestion has a mixed effect on revenue. It was observed that Revenue per trip increases as congestion increases as passengers spend more time in traffic and fares continue to accumulate.\\
+The two graphs in figure \ref{fig:7} show that congestion has a mixed effect on revenue. It was observed that Revenue per trip increases as congestion increases as passengers spend more time in traffic and fares continue to accumulate.\\
 
 Revenue per hour on the other hand tends to decrease as congestion becomes more severe. Although drivers earn more from individual trips, they complete fewer trips within the same amount of time. These result show that higher fares do not necessarily lead to higher overall earnings. This suggests that moderate congestion may benefit drivers through higher fares, but severe congestion reduces overall profitability.
 
@@ -209,12 +224,5 @@ This study found that the highest levels of congestion occurred on NYC taxi rout
 
 \section{GitHub Repository}
 The project setup and code can be found in the following GitHub repo: \url{https://github.com/ShreyaB143/MIT805-GroupProject}
-
-\newpage
-\clearpage 
-\onecolumn 
-
-\section{Appendix} 
-xxx
 
 \end{document}
